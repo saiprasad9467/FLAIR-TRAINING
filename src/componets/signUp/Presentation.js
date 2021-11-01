@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import Avatar from "@material-ui/core/Avatar";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -42,6 +42,77 @@ const useStyles = makeStyles((theme) => ({
 
 function Presentation() {
   const classes = useStyles();
+
+  const [firstName, setFirstName] = useState("");
+  const [fistNameErr, setFistNameErr] = useState(false);
+  const [lastName, setLastName] = useState("");
+  const [lastNameErr, setLastNameErr] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordErr, setPasswordErr] = useState(false);
+  const [email, setEmail] = useState("");
+  const [emailErr, setEmailErr] = useState(false);
+
+  const handelFirstName = (e) => {
+    e.preventDefault();
+    let item = e.target.value;
+    if (item.length < 5) {
+      setFistNameErr(true);
+    } else {
+      setFistNameErr(false);
+    }
+    setFirstName(item);
+  };
+  const handelLastName = (e) => {
+    e.preventDefault();
+    let item = e.target.value;
+    if (item.length < 5) {
+      setLastNameErr(true);
+    } else {
+      setLastNameErr(false);
+    }
+    setLastName(item);
+  };
+  const validateEmail = (e) => {
+    let item = e.target.value;
+    let res =
+      /^(([^<>()\]\\.,;:\s@"]+(\.[^<>()\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return res.test(item);
+  };
+  const handleEmail = (e) => {
+    e.preventDefault();
+    const d = validateEmail(e);
+    console.log(d);
+    let item = e.target.value;
+    if (!d) {
+      setEmailErr(true);
+    } else {
+      setEmailErr(false);
+    }
+    setEmail(item);
+  };
+
+  const handlePassword = (e) => {
+    e.preventDefault();
+    let item = e.target.value;
+    if (item.length < 8) {
+      setPasswordErr(true);
+    } else {
+      setPasswordErr(false);
+    }
+    setPassword(item);
+  };
+  const handelSubmit = () => {
+    if (
+      firstName.length < 4 ||
+      lastName.length < 4 ||
+      email.length < 10 ||
+      password.length < 8
+    ) {
+      alert("First fill the form");
+    } else {
+      alert("You Filled Succsefully");
+    }
+  };
   return (
     <div>
       <Container component="main" maxWidth="xs">
@@ -52,7 +123,7 @@ function Presentation() {
             <Typography component="h1" variant="h4">
               SignUp
             </Typography>
-            <form className={classes.form} noValidate>
+            <form className={classes.form} noValidate onSubmit={handelSubmit}>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -62,9 +133,12 @@ function Presentation() {
                     required
                     fullWidth
                     id="firstName"
+                    value={firstName}
                     label="First Name"
                     autoFocus
+                    onChange={handelFirstName}
                   />
+                  {fistNameErr ? <span>Enter first Name </span> : null}
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <TextField
@@ -74,8 +148,11 @@ function Presentation() {
                     id="lastName"
                     label="Last Name"
                     name="lastName"
-                    autoComplete="lname"
+                    value={lastName}
+                    autoComplete="lastname"
+                    onChange={handelLastName}
                   />
+                  {lastNameErr ? <span>Enter Last Name </span> : null}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -86,7 +163,10 @@ function Presentation() {
                     label="Email Address"
                     name="email"
                     autoComplete="email"
+                    value={email}
+                    onChange={handleEmail}
                   />
+                  {emailErr ? <span>Enter valid email </span> : null}
                 </Grid>
                 <Grid item xs={12}>
                   <TextField
@@ -97,8 +177,13 @@ function Presentation() {
                     label="Password"
                     type="password"
                     id="password"
+                    value={password}
                     autoComplete="current-password"
+                    onChange={handlePassword}
                   />
+                  {passwordErr ? (
+                    <span>Enter password must have 8 chacters </span>
+                  ) : null}
                 </Grid>
                 <Button
                   type="submit"
